@@ -1,3 +1,5 @@
+import time
+
 class NotOneToOneError(Exception):
     pass
 
@@ -94,8 +96,9 @@ class Affine:
             content = file.readlines()
         score_key_cipher = dict()
         for line in content:
-            abcipher,sep, score = line.rpartition(';')
+            abcipher, sep, score = line.rpartition(';')
             score_key_cipher[int(score[:-1])] = abcipher
+        del sep
         scores = sorted(score_key_cipher, reverse=True)
         print('the first 5 plaintext possibilities: ')
         for score in scores[:5]:
@@ -105,12 +108,23 @@ class Affine:
             print('a= ' + a + ' b= ' + b + ' plaintext= ' + plain)
         
 if __name__ == "__main__":
-    # plain = 'meet me after the yoga party' 
-    # c = Affine(5, a=11)    
+    # plain = 'meet me after the yoga party at twelve o\'clock tonight' 
+    # c = Affine(5)    
     # cipher = c.encrypt(plain)
     # print(cipher)
     # print(c.decrypt(cipher))
-    cipher = 'hxxg hx figxk gex jdtf ofkgj'
+    # cipher = 'rjjy rj fkyjw ymj dtlf ufwyd fy ybjqaj t\'hqthp ytsnlmy'
+    plain = str(input('Enter your string: '))
+    a,b = input('Enter a & b: ').split()
+    a = int(a)
+    b = int(b)
+    c = Affine(b, a)
+    cipher = c.encrypt(plain)
+    print('cipher: ' + cipher)
+    print('decrypting using key: ' + c.decrypt(cipher))
+    print('decrypting using brute force....')
+    print('brute force start time: ' + time.asctime( time.localtime(time.time()) ))
     Affine.affine_brute_force(cipher)
     Affine.quadgrams_stats(cipher)
     Affine.get_highest_scores()
+    print('brute force end time: ' + time.asctime( time.localtime(time.time()) ))
